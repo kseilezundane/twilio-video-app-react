@@ -2,6 +2,12 @@ import { ConnectOptions } from 'twilio-video';
 import { isMobile, removeUndefineds } from '..';
 import { Settings } from '../../state/settings/settingsReducer';
 import { getResolution } from '../../state/settings/renderDimensions';
+const { EventEmitter } = require('events');
+const eventListener = new EventEmitter();
+
+eventListener.on('event', function(event) {
+  console.log('The SDK raised an event:', JSON.stringify(event));
+});
 
 export default function generateConnectionOptions(settings: Settings) {
   // See: https://media.twiliocdn.com/sdk/js/video/releases/2.0.0/docs/global.html#ConnectOptions
@@ -34,6 +40,7 @@ export default function generateConnectionOptions(settings: Settings) {
     // their individual bandwidth constraints. This has no effect if you are
     // using Peer-to-Peer Rooms.
     preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
+    eventListener: eventListener,
   };
 
   // For mobile browsers, limit the maximum incoming video bitrate to 2.5 Mbps.
